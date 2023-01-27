@@ -10,6 +10,9 @@ pyyaml = "*"
 requests = "*"
 django-cors-headers = "*"
 
+[scripts]
+server = "python manage.py runserver 8000"
+
 [dev-packages]
 
 [requires]
