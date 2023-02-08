@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from .models import Product
 from .serializers import ProductSerializer
 
-# Django has generic views Create, Detail, List
+# Django has generic views Create, Detail, List, Update, Destroy
 # They can be combined to make the code simpler or
 # they can be kept separate.
 
@@ -33,6 +33,30 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     # lookup_field = 'pk' ??
 
 product_detail_view = ProductDetailAPIView.as_view()
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = instance.title
+            ## 
+
+product_update_view = ProductUpdateAPIView.as_view()
+
+class ProductDestroyAPIView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def perform_destroy(self, instance):
+        ## instance
+        super().perform_destroy(instance)
+
+product_destroy_view = ProductDestroyAPIView.as_view()
 
 class ProductListAPIView(generics.ListAPIView):
     '''
